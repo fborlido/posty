@@ -1,0 +1,10 @@
+import { createMiddleware } from "@tanstack/react-start";
+import { getSession } from "./auth.functions";
+
+export const ensureSession = createMiddleware({ type: "function" }).server(
+	async ({ next }) => {
+		const session = await getSession();
+		if (!session) throw new Error("Unauthorized");
+		return next({ context: { user: session.user } });
+	},
+);
